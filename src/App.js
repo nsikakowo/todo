@@ -1,9 +1,11 @@
 import React, {useState} from 'react'
+import { IoCheckmark, IoTrashOutline, IoRefresh } from "react-icons/io5";
 import './App.css';
 
 function App() {
   const [newItem, setnewItem] = useState("");
   const [list, setlist] = useState([]);
+  
 
   const addItem =()=>{
     if(!newItem){
@@ -29,6 +31,13 @@ function App() {
     setlist(newArray);
   }
 
+  const finished=(id)=>{
+   let mapped = list.map(task => {
+    return task.id === id ? {...task, done: !task.done} : {...task};
+   })
+   setlist(mapped);
+  }
+
   return (
     <main className="App">
       <section className='mainbody'>
@@ -45,10 +54,11 @@ function App() {
           {
             list.map(item => {
               return(
-                <li key={item.id} >{item.value}
+                <li key={item.id}>
+                  <p className='item' style={{textDecoration: item.done && "line-through" }}> {item.value}</p>
                 <div className='options'>
-                  <p>DONE</p>
-                 <button onClick={()=>deleteItem(item.id)} >x</button> 
+                  <p onClick={()=> finished(item.id)}>{item.done ? <IoRefresh/> : <IoCheckmark />}</p>
+                 <button onClick={()=>deleteItem(item.id)}><IoTrashOutline/></button> 
                 </div>
                 </li>
               )
